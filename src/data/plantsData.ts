@@ -1,0 +1,68 @@
+import { Plant } from '../types';
+
+export const plantsData: Plant[] = [
+  {
+    id: 1,
+    name: 'Spider Plant',
+    category: 'Aromatic',
+    description: 'A classic, easy-care houseplant with arching leaves and tiny plantlets that dangle from long stems.',
+    price: 12,
+    image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 2,
+    name: 'Peace Lily',
+    category: 'Aromatic',
+    description: 'Known for its air-purifying qualities and elegant white flowers that bloom throughout the year.',
+    price: 18,
+    image: 'https://images.pexels.com/photos/1702425/pexels-photo-1702425.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 3,
+    name: 'Snake Plant',
+    category: 'Medicinal',
+    description: 'A hardy succulent with tall, stiff leaves that can survive in low light and with minimal water.',
+    price: 15,
+    image: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 4,
+    name: 'Aloe Vera',
+    category: 'Medicinal',
+    description: 'Succulent plant with healing properties, perfect for burns and skin conditions.',
+    price: 10,
+    image: 'https://images.pexels.com/photos/912396/pexels-photo-912396.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 5,
+    name: 'Lavender',
+    category: 'Aromatic',
+    description: 'Beautiful purple flowers with a calming scent, known to promote relaxation and sleep.',
+    price: 14,
+    image: 'https://images.pexels.com/photos/158648/pexels-photo-158648.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 6,
+    name: 'Basil',
+    category: 'Aromatic',
+    description: 'Fragrant herb perfect for cooking and adding fresh flavor to dishes.',
+    price: 8,
+    image: 'https://images.pexels.com/photos/5677011/pexels-photo-5677011.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 7,
+    name: 'Eucalyptus',
+    category: 'Medicinal',
+    description: 'Known for its distinct aroma and medicinal properties for respiratory issues.',
+    price: 20,
+    image: 'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+  {
+    id: 8,
+    name: 'Fern',
+    category: 'Medicinal',
+    description: 'Lush green fronds that purify the air and add a tropical feel to any space.',
+    price: 16,
+    image: 'https://images.pexels.com/photos/1903965/pexels-photo-1903965.jpeg?auto=compress&cs=tinysrgb&w=600',
+  },
+];
