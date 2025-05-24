@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://reuelc.github.io/e-plantshopping",
+  "homepage": "https://reuelc.github.io/e-plantShopping",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
