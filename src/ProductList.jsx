@@ -1,320 +1,254 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateQuantity, removeItem, addItem } from './CartSlice';
-import './CartItem.css';
+import { addItem } from './CartSlice';
+import CartItem from './CartItem';
+import './ProductList.css';
 
-function CartItem({ onContinueShopping }) {
-    // Access Redux store
-    const cartItems = useSelector(state => state.cart.items);
-    const dispatch = useDispatch();
+function ProductList({ onHomeClick }) {
+  const [showCart, setShowCart] = useState(false);
+  const [addedToCart, setAddedToCart] = useState({});
+  const cartItems = useSelector(state => state.cart.items);
+  const dispatch = useDispatch();
 
-    // Calculate total amount for all items in cart
-    const calculateTotalAmount = () => {
-        return cartItems.reduce((total, item) => {
-            const cost = parseFloat(item.cost.substring(1)); // Remove $ and convert to number
-            return total + (cost * item.quantity);
-        }, 0).toFixed(2);
-    };
-
-    // Calculate total cost for individual item
-    const calculateTotalCost = (item) => {
-        const cost = parseFloat(item.cost.substring(1));
-        return (cost * item.quantity).toFixed(2);
-    };
-
-    // Handle increment quantity
-    const handleIncrement = (item) => {
-        dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
-    };
-
-    // Handle decrement quantity
-    const handleDecrement = (item) => {
-        if (item.quantity > 1) {
-            dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
-        } else {
-            // If quantity would drop to 0, remove the item
-            dispatch(removeItem(item.name));
+  // Sample plant data - you can replace this with your actual data
+  const plantsArray = [
+    {
+      category: "Air Purifying Plants",
+      plants: [
+        {
+          name: "Snake Plant",
+          image: "https://cdn.pixabay.com/photo/2021/01/22/06/04/snake-plant-5939187_1280.jpg",
+          description: "Produces oxygen at night, improving air quality.",
+          cost: "$15"
+        },
+        {
+          name: "Spider Plant",
+          image: "https://cdn.pixabay.com/photo/2018/07/11/06/47/chlorophytum-3530413_1280.jpg",
+          description: "Filters formaldehyde and xylene from the air.",
+          cost: "$12"
+        },
+        {
+          name: "Peace Lily",
+          image: "https://cdn.pixabay.com/photo/2019/06/12/14/14/peace-lilies-4269365_1280.jpg",
+          description: "Removes mold spores and purifies the air.",
+          cost: "$18"
         }
-    };
+      ]
+    },
+    {
+      category: "Aromatic Fragrant Plants",
+      plants: [
+        {
+          name: "Lavender",
+          image: "https://images.unsplash.com/photo-1611909023032-2d67c9cea7c1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          description: "Calming scent, used in aromatherapy.",
+          cost: "$20"
+        },
+        {
+          name: "Jasmine",
+          image: "https://images.unsplash.com/photo-1592729645009-b96d1e63d14b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          description: "Sweet fragrance, promotes relaxation.",
+          cost: "$18"
+        },
+        {
+          name: "Rosemary",
+          image: "https://cdn.pixabay.com/photo/2019/10/11/07/12/rosemary-4541241_1280.jpg",
+          description: "Invigorating scent, improves memory.",
+          cost: "$15"
+        }
+      ]
+    },
+    {
+      category: "Insect Repellent Plants",
+      plants: [
+        {
+          name: "Oregano",
+          image: "https://cdn.pixabay.com/photo/2015/05/30/21/20/oregano-790702_1280.jpg",
+          description: "Repels ants, flies, and mosquitoes.",
+          cost: "$10"
+        },
+        {
+          name: "Marigold",
+          image: "https://cdn.pixabay.com/photo/2022/02/22/05/45/marigold-7028063_1280.jpg",
+          description: "Natural insect repellent, bright and colorful.",
+          cost: "$8"
+        },
+        {
+          name: "Geraniums",
+          image: "https://cdn.pixabay.com/photo/2012/04/26/21/51/flowerpot-43270_1280.jpg",
+          description: "Repels mosquitoes and other flying insects.",
+          cost: "$12"
+        }
+      ]
+    },
+    {
+      category: "Medicinal Plants",
+      plants: [
+        {
+          name: "Aloe Vera",
+          image: "https://cdn.pixabay.com/photo/2018/04/02/07/42/leaf-3283175_1280.jpg",
+          description: "Soothing gel for skin ailments.",
+          cost: "$14"
+        },
+        {
+          name: "Echinacea",
+          image: "https://cdn.pixabay.com/photo/2014/12/05/03/53/echinacea-557477_1280.jpg",
+          description: "Boosts immune system, helps fight colds.",
+          cost: "$16"
+        },
+        {
+          name: "Peppermint",
+          image: "https://cdn.pixabay.com/photo/2017/07/12/12/23/peppermint-2496773_1280.jpg",
+          description: "Soothes digestive issues and headaches.",
+          cost: "$13"
+        }
+      ]
+    },
+    {
+      category: "Low Maintenance Plants",
+      plants: [
+        {
+          name: "ZZ Plant",
+          image: "https://images.unsplash.com/photo-1632207691143-643e2a9a9361?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          description: "Thrives in low light and requires minimal watering.",
+          cost: "$25"
+        },
+        {
+          name: "Pothos",
+          image: "https://cdn.pixabay.com/photo/2018/11/15/10/32/plants-3816945_1280.jpg",
+          description: "Tolerates neglect and grows in various conditions.",
+          cost: "$10"
+        },
+        {
+          name: "Rubber Plant",
+          image: "https://cdn.pixabay.com/photo/2020/02/15/11/49/flower-4850729_1280.jpg",
+          description: "Easy to care for and adapts to most environments.",
+          cost: "$17"
+        }
+      ]
+    }
+  ];
 
-    // Handle remove item from cart
-    const handleRemove = (item) => {
-        dispatch(removeItem(item.name));
-    };
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    setShowCart(true);
+  };
 
-    // Handle continue shopping
-    const handleContinueShopping = (e) => {
-        e.preventDefault();
-        onContinueShopping();
-    };
+  const handlePlantsClick = (e) => {
+    e.preventDefault();
+    setShowCart(false);
+  };
 
-    // Handle checkout (placeholder function)
-    const handleCheckoutShopping = (e) => {
-        e.preventDefault();
-        alert('Functionality to be added for future reference');
-    };
+  const handleContinueShopping = () => {
+    setShowCart(false);
+  };
 
-    const styleObj = {
-        backgroundColor: '#4CAF50',
-        color: '#fff',
-        padding: '15px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        fontSize: '20px',
-    };
+  const handleAddToCart = (plant) => {
+    dispatch(addItem(plant));
+    setAddedToCart(prev => ({
+      ...prev,
+      [plant.name]: true
+    }));
+  };
 
-    const styleObjUl = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '1100px',
-    };
+  const calculateTotalQuantity = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
 
-    const styleA = {
-        color: 'white',
-        fontSize: '30px',
-        textDecoration: 'none',
-    };
+  const styleObj = {
+    backgroundColor: '#4CAF50',
+    color: '#fff!important',
+    padding: '15px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '20px',
+  };
 
-    return (
-        <div>
-            {/* Navigation Bar */}
-            <div className="navbar" style={styleObj}>
-                <div className="tag">
-                    <div className="luxury">
-                        <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
-                        <div>
-                            <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
-                            <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
-                        </div>
-                    </div>
-                </div>
-                <div style={styleObjUl}>
-                    <div>
-                        <a href="#" onClick={handleContinueShopping} style={styleA}>
-                            Plants
-                        </a>
-                    </div>
-                    <div>
-                        <a href="#" style={styleA}>
-                            <h1 className='cart'>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" height="68" width="68">
-                                    <circle cx="80" cy="216" r="12"></circle>
-                                    <circle cx="184" cy="216" r="12"></circle>
-                                    <path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" 
-                                          fill="none" stroke="#faf9f9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-                                    </path>
-                                </svg>
-                                {cartItems.length > 0 && (
-                                    <span style={{
-                                        position: 'absolute',
-                                        top: '10px',
-                                        right: '10px',
-                                        backgroundColor: 'red',
-                                        color: 'white',
-                                        borderRadius: '50%',
-                                        width: '25px',
-                                        height: '25px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '14px'
-                                    }}>
-                                        {cartItems.reduce((total, item) => total + item.quantity, 0)}
-                                    </span>
-                                )}
-                            </h1>
-                        </a>
-                    </div>
-                </div>
-            </div>
+  const styleObjUl = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '1100px',
+  };
 
-            {/* Cart Content */}
-            <div className="cart-container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-                <h2 style={{ color: '#4CAF50', textAlign: 'center', marginBottom: '30px' }}>
-                    Total Cart Amount: ${calculateTotalAmount()}
-                </h2>
-                
-                {cartItems.length === 0 ? (
-                    <div className="empty-cart" style={{ textAlign: 'center', padding: '50px' }}>
-                        <p style={{ fontSize: '18px', marginBottom: '20px' }}>Your cart is empty</p>
-                        <button 
-                            className="continue-shopping-btn"
-                            onClick={handleContinueShopping}
-                            style={{
-                                backgroundColor: '#4CAF50',
-                                color: 'white',
-                                border: 'none',
-                                padding: '12px 30px',
-                                fontSize: '16px',
-                                borderRadius: '5px',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Continue Shopping
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        <div className="cart-items">
-                            {cartItems.map((item, index) => (
-                                <div key={index} className="cart-item" style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '10px',
-                                    padding: '20px',
-                                    marginBottom: '20px',
-                                    backgroundColor: '#f9f9f9'
-                                }}>
-                                    <img 
-                                        className="cart-item-image" 
-                                        src={item.image} 
-                                        alt={item.name}
-                                        style={{
-                                            width: '120px',
-                                            height: '120px',
-                                            objectFit: 'cover',
-                                            borderRadius: '8px',
-                                            marginRight: '20px'
-                                        }}
-                                    />
-                                    <div className="cart-item-details" style={{ flex: 1 }}>
-                                        <div className="cart-item-name" style={{
-                                            fontSize: '24px',
-                                            fontWeight: 'bold',
-                                            marginBottom: '10px',
-                                            color: '#333'
-                                        }}>
-                                            {item.name}
-                                        </div>
-                                        <div className="cart-item-cost" style={{
-                                            fontSize: '18px',
-                                            color: '#666',
-                                            marginBottom: '15px'
-                                        }}>
-                                            {item.cost}
-                                        </div>
-                                        <div className="cart-item-quantity" style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '10px',
-                                            marginBottom: '15px'
-                                        }}>
-                                            <button 
-                                                className="quantity-btn decrease"
-                                                onClick={() => handleDecrement(item)}
-                                                style={{
-                                                    backgroundColor: '#f44336',
-                                                    color: 'white',
-                                                    border: 'none',
-                                                    width: '30px',
-                                                    height: '30px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    fontSize: '18px'
-                                                }}
-                                            >
-                                                -
-                                            </button>
-                                            <span className="quantity" style={{
-                                                fontSize: '18px',
-                                                fontWeight: 'bold',
-                                                minWidth: '30px',
-                                                textAlign: 'center'
-                                            }}>
-                                                {item.quantity}
-                                            </span>
-                                            <button 
-                                                className="quantity-btn increase"
-                                                onClick={() => handleIncrement(item)}
-                                                style={{
-                                                    backgroundColor: '#4CAF50',
-                                                    color: 'white',
-                                                    border: 'none',
-                                                    width: '30px',
-                                                    height: '30px',
-                                                    borderRadius: '5px',
-                                                    cursor: 'pointer',
-                                                    fontSize: '18px'
-                                                }}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                        <div className="cart-item-total" style={{
-                                            fontSize: '18px',
-                                            fontWeight: 'bold',
-                                            marginBottom: '15px',
-                                            color: '#333'
-                                        }}>
-                                            Total: ${calculateTotalCost(item)}
-                                        </div>
-                                        <button 
-                                            className="delete-btn"
-                                            onClick={() => handleRemove(item)}
-                                            style={{
-                                                backgroundColor: '#ff6b6b',
-                                                color: 'white',
-                                                border: 'none',
-                                                padding: '8px 20px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                                fontSize: '14px'
-                                            }}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        <div className="cart-actions" style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginTop: '30px',
-                            gap: '20px'
-                        }}>
-                            <button 
-                                className="continue-shopping-btn"
-                                onClick={handleContinueShopping}
-                                style={{
-                                    backgroundColor: '#4CAF50',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '15px 30px',
-                                    fontSize: '16px',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    flex: 1
-                                }}
-                            >
-                                Continue Shopping
-                            </button>
-                            <button 
-                                className="checkout-btn"
-                                onClick={handleCheckoutShopping}
-                                style={{
-                                    backgroundColor: '#ff9800',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '15px 30px',
-                                    fontSize: '16px',
-                                    borderRadius: '5px',
-                                    cursor: 'pointer',
-                                    flex: 1
-                                }}
-                            >
-                                Checkout
-                            </button>
-                        </div>
-                    </>
-                )}
-            </div>
+  const styleA = {
+    color: 'white',
+    fontSize: '30px',
+    textDecoration: 'none',
+  };
+
+  if (showCart) {
+    return <CartItem onContinueShopping={handleContinueShopping} />;
+  }
+
+  return (
+    <div>
+      <div className="navbar" style={styleObj}>
+        <div className="tag">
+          <div className="luxury">
+            <img 
+              src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" 
+              alt="Paradise Nursery Logo" 
+            />
+            <a href="#" onClick={onHomeClick} className="tag_home_link">
+              <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
+              <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
+            </a>
+          </div>
         </div>
-    );
+        <div style={styleObjUl}>
+          <div>
+            <a href="#" onClick={handlePlantsClick} style={styleA}>
+              Plants
+            </a>
+          </div>
+          <div>
+            <a href="#" onClick={handleCartClick} style={styleA}>
+              <h1 className='cart'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" height="68" width="68">
+                  <circle cx="80" cy="216" r="12"></circle>
+                  <circle cx="184" cy="216" r="12"></circle>
+                  <path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" 
+                        fill="none" stroke="#faf9f9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+                  </path>
+                </svg>
+                <span className='cart_quantity_count'>{calculateTotalQuantity()}</span>
+              </h1>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="product-grid">
+        <h1 className="plant_heading">All Plants</h1>
+        <div className="product-list">
+          {plantsArray.map((category, index) => (
+            <div key={index}>
+              <h1>{category.category}</h1>
+              <div className="product-list">
+                {category.plants.map((plant, plantIndex) => (
+                  <div className="product-card" key={plantIndex}>
+                    <img className="product-image" src={plant.image} alt={plant.name} />
+                    <div className="product-title">{plant.name}</div>
+                    <div className="product-description">{plant.description}</div>
+                    <div className="product-price">{plant.cost}</div>
+                    <button 
+                      className={`product-button ${addedToCart[plant.name] ? 'added-to-cart' : ''}`}
+                      onClick={() => handleAddToCart(plant)}
+                      disabled={addedToCart[plant.name]}
+                    >
+                      {addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default CartItem;
+export default ProductList;
